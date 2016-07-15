@@ -1,0 +1,24 @@
+{
+    "name": "moodlehq/rtlcss-php",
+    "type": "library",
+    "description": "Convert CSS to Right-to-Left (Port of RTLCSS)",
+    "keywords": ["rtl", "css"],
+    "license": "GPL-v3",
+    "minimum-stability": "dev",
+    "repositories": [{
+        "type": "vcs",
+        "url": "https://github.com/moodlehq/PHP-CSS-Parser"
+    }],
+    "require": {
+        "php": ">=5.4",
+        "sabberworm/php-css-parser": "dev-MOODLE_32_STABLE as 1.0.x-dev"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "*"
+    },
+    "autoload": {
+        "psr-4": {
+            "MoodleHQ\\": "src/MoodleHQ"
+        }
+    }
+}
