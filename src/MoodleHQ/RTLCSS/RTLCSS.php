@@ -18,12 +18,12 @@ use Sabberworm\CSS\Value\ValueList;
 
 // TODO Handle \9 \0 for IE hacks.
 // TODO Keep escaped characters in content. e.g. content: "\2014 \00A0";
-// TODO Check whether:
-// background-position: 0 0; -> background-position: 100% 100%;
-// background-position: 1rem 0; -> background-position: 1rem 100%;
 class RTLCSS {
 
     protected $tree;
+    protected $shouldAddCss = [];
+    protected $shouldIgnore = false;
+    protected $shouldRemove = false;
 
     public function __construct(Document $tree) {
         $this->tree = $tree;
@@ -60,6 +60,28 @@ class RTLCSS {
         } else if ($value instanceof Size) {
             if ($value->getSize() != 0) {
                 $value->setSize(-$value->getSize());
+            }
+        }
+    }
+
+    protected function parseComments(array $comments) {
+        $startRule = '^(\s|\*)*!?rtl:';
+        foreach ($comments as $comment) {
+            $content = $comment->getComment();
+            if (preg_match('/' . $startRule . 'ignore/', $content)) {
+                $this->shouldIgnore = 1;
+            } else if (preg_match('/' . $startRule . 'begin:ignore/', $content)) {
+                $this->shouldIgnore = true;
+            } else if (preg_match('/' . $startRule . 'end:ignore/', $content)) {
+                $this->shouldIgnore = false;
+            } else if (preg_match('/' . $startRule . 'remove/', $content)) {
+                $this->shouldRemove = 1;
+            } else if (preg_match('/' . $startRule . 'begin:remove/', $content)) {
+                $this->shouldRemove = true;
+            } else if (preg_match('/' . $startRule . 'end:remove/', $content)) {
+                $this->shouldRemove = false;
+            } else if (preg_match('/' . $startRule . 'raw:/', $content)) {
+                $this->shouldAddCss[] = preg_replace('/' . $startRule . 'raw:/', '', $content);
             }
         }
     }
@@ -134,21 +156,65 @@ class RTLCSS {
         }
     }
 
-    protected function processBlock($node) {
-        foreach ($node->getContents() as $node) {
-            if ($node instanceof CSSList) {
-                $this->processBlock($node);
+    protected function processBlock($block) {
+        $contents = [];
+
+        foreach ($block->getContents() as $node) {
+            $this->parseComments($node->getComments());
+
+            if ($toAdd = $this->shouldAddCss()) {
+                foreach ($toAdd as $add) {
+                    $parser = new Parser($add);
+                    $contents[] = $parser->parse();
+                }
             }
-            if ($node instanceof RuleSet) {
-                $this->processDeclaration($node);
+
+            if ($this->shouldRemoveNext()) {
+                continue;
+
+            } else if (!$this->shouldIgnoreNext()) {
+                if ($node instanceof CSSList) {
+                    $this->processBlock($node);
+                }
+                if ($node instanceof RuleSet) {
+                    $this->processDeclaration($node);
+                }
             }
+
+            $contents[] = $node;
         }
+
+        $block->setContents($contents);
     }
 
     protected function processDeclaration($node) {
-        foreach ($node->getRules() as $rule) {
-            $this->processRule($rule);
+        $rules = [];
+
+        foreach ($node->getRules() as $key => $rule) {
+            $this->parseComments($rule->getComments());
+
+            if ($toAdd = $this->shouldAddCss()) {
+                foreach ($toAdd as $add) {
+                    $parser = new Parser('.wrapper{' . $add . '}');
+                    $tree = $parser->parse();
+                    $contents = $tree->getContents();
+                    foreach ($contents[0]->getRules() as $newRule) {
+                        $rules[] = $newRule;
+                    }
+                }
+            }
+
+            if ($this->shouldRemoveNext()) {
+                continue;
+
+            } else if (!$this->shouldIgnoreNext()) {
+                $this->processRule($rule);
+            }
+
+            $rules[] = $rule;
         }
+
+        $node->setRules($rules);
     }
 
     protected function processRule($rule) {
@@ -296,6 +362,35 @@ class RTLCSS {
                 $this->complement($value);
             }
         }
+    }
+
+    protected function shouldAddCss() {
+        if (!empty($this->shouldAddCss)) {
+            $css = $this->shouldAddCss;
+            $this->shouldAddCss = [];
+            return $css;
+        }
+        return [];
+    }
+
+    protected function shouldIgnoreNext() {
+        if ($this->shouldIgnore) {
+            if (is_int($this->shouldIgnore)) {
+                $this->shouldIgnore--;
+            }
+            return true;
+        }
+        return false;
+    }
+
+    protected function shouldRemoveNext() {
+        if ($this->shouldRemove) {
+            if (is_int($this->shouldRemove)) {
+                $this->shouldRemove--;
+            }
+            return true;
+        }
+        return false;
     }
 
     protected function swap($value, $a, $b, $options = ['scope' => '*', 'ignoreCase' => true]) {

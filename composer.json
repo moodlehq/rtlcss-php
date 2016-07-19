@@ -7,7 +7,7 @@
     "minimum-stability": "dev",
     "repositories": [{
         "type": "vcs",
-        "url": "https://github.com/moodlehq/PHP-CSS-Parser"
+        "url": "/home/fred/apps/PHP-CSS-Parser"
     }],
     "require": {
         "php": ">=5.4",

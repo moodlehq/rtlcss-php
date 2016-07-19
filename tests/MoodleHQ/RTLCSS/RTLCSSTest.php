@@ -216,6 +216,78 @@ class RTLCSSTest extends \PHPUnit_Framework_TestCase {
         ];
     }
 
+    public function directivesProvider() {
+        return [
+            [[
+                'should' => 'Should ignore flipping - rule level (default)',
+                'expected' => 'div {left:10px;text-align:right;}',
+                'input' => '/*rtl:ignore*/div { left:10px; text-align:right;}',
+                'reversable' => false
+            ]],
+            [[
+                'should' => 'Should ignore flipping - rule level (!important comment)',
+                'expected' => 'div {left:10px;text-align:right;}',
+                'input' => '/*!rtl:ignore*/div { left:10px; text-align:right;}',
+                'reversable' => false,
+            ]],
+            [[
+                'should' => 'Should ignore flipping - decl. level (default)',
+                'expected' => 'div {left:10px;text-align:left;}',
+                'input' => 'div {left:10px/*rtl:ignore*/;text-align:right;}',
+                'reversable' => false,
+                'skip' => true
+            ]],
+            [[
+                'should' => 'Should add raw css rules',
+                'expected' => 'div {left:10px;text-align:right;} a {display:block;}',
+                'input' => '/*rtl:raw: div { left:10px;text-align:right;}*/ a {display:block;}',
+                'reversable' => false
+            ]],
+            [[
+                'should' => 'Should add raw css declarations',
+                'expected' => 'div {font-family:"Droid Kufi Arabic";right:10px;text-align:left;}',
+                'input' => 'div { /*rtl:raw: font-family: "Droid Kufi Arabic";*/ left:10px;text-align:right;}',
+                'reversable' => false
+            ]],
+            [[
+                'should' => 'Should support block-style',
+                'expected' => 'div {left:10px;text-align:right;}',
+                'input' => ' div {/*rtl:begin:ignore*/left:10px;/*rtl:end:ignore*/ text-align:left;}',
+                'reversable' => false
+            ]],
+            [[
+                'should' => 'Should support none block-style',
+                'expected' => 'div {left:10px;text-align:left;}',
+                'input' => ' /*rtl:ignore*/div {left:10px; text-align:left;}',
+                'reversable' => false
+            ]],
+            [[
+                'should' => 'Should remove rules (block-style)',
+                'expected' => 'b {float:right;}',
+                'input' => ' /*rtl:begin:remove*/div {left:10px; text-align:left;} a { display:block;} /*rtl:end:remove*/ b{float:left;}',
+                'reversable' => false
+            ]],
+            [[
+                'should' => 'Should remove rules',
+                'expected' => 'a {display:block;} b {float:right;}',
+                'input' => ' /*rtl:remove*/div {left:10px; text-align:left;} a { display:block;} b{float:left;}',
+                'reversable' => false
+            ]],
+            [[
+                'should' => 'Should remove declarations',
+                'expected' => 'div {text-align:right;}',
+                'input' => 'div {/*rtl:remove*/left:10px; text-align:left;}',
+                'reversable' => false
+            ]],
+            [[
+                'should' => 'Should remove declarations (block-style)',
+                'expected' => 'div {display:inline;}',
+                'input' => 'div {/*rtl:begin:remove*/left:10px; text-align:left;/*rtl:end:remove*/ display:inline;}',
+                'reversable' => false
+            ]]
+        ];
+    }
+
     public function propertiesProvider() {
         return [
             [[
@@ -918,7 +990,8 @@ class RTLCSSTest extends \PHPUnit_Framework_TestCase {
      */
     protected function assertFlips($expected, $input, $description, $output = null) {
         $parser = new Parser($input);
-        $rtlcss = new RTLCSS($parser->parse());
+        $tree = $parser->parse();
+        $rtlcss = new RTLCSS($tree);
         $flipped = $rtlcss->flip();
         $this->assertEquals($expected, $flipped->render($output), $description);
     }
@@ -965,6 +1038,20 @@ class RTLCSSTest extends \PHPUnit_Framework_TestCase {
         $output->set('SpaceAfterRuleName', ' ');
         $output->set('SpaceBeforeRules', ' ');
         $output->set('SpaceAfterRules', ' ');
+        $output->set('SpaceAfterListArgumentSeparator', array('default' => '', ',' => ' '));
+        $this->assertSample($data, $output);
+    }
+
+    /**
+     * @dataProvider directivesProvider
+     */
+    public function testDirectives($data) {
+        $output = new OutputFormat();
+        $output->set('SpaceAfterRuleName', '');
+        $output->set('SpaceBeforeRules', '');
+        $output->set('SpaceAfterRules', '');
+        $output->set('SpaceBetweenRules', '');
+        $output->set('SpaceBetweenBlocks', ' ');
         $output->set('SpaceAfterListArgumentSeparator', array('default' => '', ',' => ' '));
         $this->assertSample($data, $output);
     }
