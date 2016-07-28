@@ -1,4 +1,11 @@
 <?php
+/**
+ * RTLCSS.
+ *
+ * @package   MoodleHQ\RTLCSS
+ * @copyright 2016 Frédéric Massart - FMCorz.net
+ * @license   https://opensource.org/licenses/MIT MIT
+ */
 
 namespace MoodleHQ\RTLCSS;
 
@@ -16,8 +23,13 @@ use Sabberworm\CSS\Value\RuleValueList;
 use Sabberworm\CSS\Value\Size;
 use Sabberworm\CSS\Value\ValueList;
 
-// TODO Handle \9 \0 for IE hacks.
-// TODO Keep escaped characters in content. e.g. content: "\2014 \00A0";
+/**
+ * RTLCSS Class.
+ *
+ * @package   MoodleHQ\RTLCSS
+ * @copyright 2016 Frédéric Massart - FMCorz.net
+ * @license   https://opensource.org/licenses/MIT MIT
+ */
 class RTLCSS {
 
     protected $tree;
