@@ -155,4 +155,4 @@ This tool is very heavily inspired by [MohammaYounes/rtlcss](https://github.com/
 
 ## License
 
-Licensed under the [GNU GPL License](http://www.gnu.org/copyleft/gpl.html).
+Licensed under the [MIT License](https://opensource.org/licenses/MIT).
