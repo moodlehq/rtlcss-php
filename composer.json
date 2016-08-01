@@ -3,15 +3,11 @@
     "type": "library",
     "description": "Convert CSS to Right-to-Left (Port of RTLCSS)",
     "keywords": ["rtl", "css"],
-    "license": "GPL-v3",
+    "license": "MIT",
     "minimum-stability": "dev",
-    "repositories": [{
-        "type": "vcs",
-        "url": "/home/fred/apps/PHP-CSS-Parser"
-    }],
     "require": {
         "php": ">=5.4",
-        "sabberworm/php-css-parser": "dev-MOODLE_32_STABLE as 1.0.x-dev"
+        "sabberworm/php-css-parser": "*"
     },
     "require-dev": {
         "phpunit/phpunit": "*"
