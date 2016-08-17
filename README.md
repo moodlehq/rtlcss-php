@@ -144,6 +144,34 @@ Becomes:
 }
 ```
 
+### Limitation
+
+Currently the comments must always precede a statement, they will not work if they are not followed by anything.
+
+Valid:
+```css
+.div {
+    /*rtl:raw:
+        text-align: left;
+    */
+    float: left;
+}
+```
+
+Invalid:
+```css
+.div {
+    float: left;
+    /*rtl:raw:
+        text-align: left;
+    */
+}
+```
+
+## CSS support
+
+A lot of common CSS rules are supported, however a few complex ones are not. To get a grasp of what is supported and what isn't, please refer to the test cases. Unsupported scenarios are marked to be skipped.
+
 ## About this tool
 
 This tool is very heavily inspired by [MohammaYounes/rtlcss](https://github.com/MohammadYounes/rtlcss), even though at this stage it does not include all of its features. See this library as a partial port of the latter.
