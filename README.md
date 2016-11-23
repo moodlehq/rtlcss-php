@@ -31,7 +31,7 @@ $rtlcss->flip();
 echo $tree->render();
 ```
 
-For parsing options and rendering, refer to [Sabeerword/PHP-CSS-Parser](https://github.com/sabberworm/PHP-CSS-Parser).
+For parsing options and rendering, refer to [Sabberworm/PHP-CSS-Parser](https://github.com/sabberworm/PHP-CSS-Parser).
 
 ## Output sample
 
@@ -174,12 +174,12 @@ A lot of common CSS rules are supported, however a few complex ones are not. To 
 
 ## About this tool
 
-This tool is very heavily inspired by [MohammaYounes/rtlcss](https://github.com/MohammadYounes/rtlcss), even though at this stage it does not include all of its features. See this library as a partial port of the latter.
+This tool is very heavily inspired by [MohammadYounes/rtlcss](https://github.com/MohammadYounes/rtlcss), even though at this stage it does not include all of its features. See this library as a partial port of the latter.
 
 ## Credits
 
-* [MohammaYounes/rtlcss](https://github.com/MohammadYounes/rtlcss) for being the example we followed.
-* [Sabeerword/PHP-CSS-Parser](https://github.com/sabberworm/PHP-CSS-Parser) for parsing CSS in PHP.
+* [MohammadYounes/rtlcss](https://github.com/MohammadYounes/rtlcss) for being the example we followed.
+* [Sabberworm/PHP-CSS-Parser](https://github.com/sabberworm/PHP-CSS-Parser) for parsing CSS in PHP.
 
 ## License
 
