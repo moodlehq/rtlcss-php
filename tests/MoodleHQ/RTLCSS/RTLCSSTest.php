@@ -5,7 +5,7 @@ namespace MoodleHQ\RTLCSS;
 use Sabberworm\CSS\Parser;
 use Sabberworm\CSS\OutputFormat;
 
-class RTLCSSTest extends \PHPUnit_Framework_TestCase {
+class RTLCSSTest extends \PHPUnit\Framework\TestCase {
 
     public function backgroundImageProvider() {
         return [
