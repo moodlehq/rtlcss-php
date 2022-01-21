@@ -270,17 +270,19 @@ class RTLCSS {
                     $groups = [$value];
                 }
                 foreach ($groups as $group) {
-                    $values = $group->getListComponents();
-                    switch (count($values)) {
-                        case 2:
-                            $group->setListComponents(array_reverse($values));
-                            break;
-                        case 3:
-                            $group->setListComponents([$values[1], $values[0], $values[1], $values[2]]);
-                            break;
-                        case 4:
-                            $group->setListComponents([$values[1], $values[0], $values[3], $values[2]]);
-                            break;
+                    if ($group instanceof RuleValueList) {
+                        $values = $group->getListComponents();
+                        switch (count($values)) {
+                            case 2:
+                                $group->setListComponents(array_reverse($values));
+                                break;
+                            case 3:
+                                $group->setListComponents([$values[1], $values[0], $values[1], $values[2]]);
+                                break;
+                            case 4:
+                                $group->setListComponents([$values[1], $values[0], $values[3], $values[2]]);
+                                break;
+                        }
                     }
                 }
             }
