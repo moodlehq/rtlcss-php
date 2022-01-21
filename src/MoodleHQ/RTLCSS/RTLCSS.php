@@ -354,7 +354,7 @@ class RTLCSS {
 
             $value = $parts[0];
             // The first value may be referencing top or bottom (y instead of x).
-            if (!is_object($value) && preg_match('/top|bottom/i', $value)) {
+            if (!is_object($value) && preg_match('/top|bottom/i', $value) && count($parts)>1) {
                 $value = $parts[1];
             }
 
