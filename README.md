@@ -1,6 +1,8 @@
 RTLCSS for PHP
 --------------
 
+[![Codechecker CI](https://github.com/moodlehq/rtlcss-php/actions/workflows/ci.yml/badge.svg)](https://github.com/moodlehq/rtlcss-php/actions/workflows/ci.yml)
+
 RTLCSS is a framework for converting Left-To-Right (LTR) Cascading Style Sheets(CSS) to Right-To-Left (RTL).
 
 ## Usage
