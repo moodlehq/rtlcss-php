@@ -6,11 +6,11 @@
     "license": "MIT",
     "minimum-stability": "dev",
     "require": {
-        "php": ">=5.4",
-        "sabberworm/php-css-parser": "*"
+        "php": ">=7.3.0",
+        "sabberworm/php-css-parser": "8.1.*"
     },
     "require-dev": {
-        "phpunit/phpunit": "*"
+        "phpunit/phpunit": "9.5.*"
     },
     "autoload": {
         "psr-4": {
